@@ -1,0 +1,33 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  nodes:
+    name: Lint and test the nodes
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: linnet_comfyui
+      - uses: actions/checkout@v4
+        with:
+          repository: franknoh/Linnet
+          path: Linnet
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - run: cmake --preset release && cmake --build --preset release
+        working-directory: Linnet
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --extra-index-url https://download.pytorch.org/whl/cpu "torch>=2.4" -e "Linnet/python/linnet[nest]" pytest ruff safetensors
+      - run: ruff check . && ruff format --check .
+        working-directory: linnet_comfyui
+      - run: pytest -q
+        working-directory: linnet_comfyui
+        env:
+          LINNET_BIN: ${{ github.workspace }}/Linnet/build/release/linnet
+          LINNET_REPO: ${{ github.workspace }}/Linnet

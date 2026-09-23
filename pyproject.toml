@@ -1,0 +1,38 @@
+[project]
+name = "linnet-comfyui"
+version = "0.1.0"
+description = "ComfyUI nodes for Linnet models"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+    "linnet-lang[torch,nest] @ git+https://github.com/franknoh/Linnet#subdirectory=python/linnet",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+    "safetensors>=0.4",
+]
+
+[project.urls]
+Repository = "https://github.com/franknoh/linnet-comfyui"
+Documentation = "https://linnet.franknoh.dev/docs/integrations"
+
+[tool.comfy]
+PublisherId = "franknoh"
+DisplayName = "Linnet"
+Icon = ""
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The package root has an __init__.py for ComfyUI; import tests by path instead.
+addopts = "--import-mode=importlib"

@@ -1,0 +1,1 @@
+linnet-lang[torch,nest] @ git+https://github.com/franknoh/Linnet#subdirectory=python/linnet
